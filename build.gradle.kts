@@ -73,7 +73,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("org.jetbrains.skiko:skiko:0.7.32")
+                implementation("org.jetbrains.skiko:skiko:0.7.35")
                 implementation(compose.runtime)
                 implementation(compose.material)
                 implementation(compose.foundation)

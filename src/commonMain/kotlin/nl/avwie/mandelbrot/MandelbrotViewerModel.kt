@@ -11,6 +11,8 @@ import kotlin.time.measureTime
 
 class MandelbrotViewerModel(private val scope: CoroutineScope) {
 
+    private var currentCalculationJob : Job = Job()
+
     private val viewPorts = MutableStateFlow(
         Viewport(
             width = 1,
@@ -24,21 +26,18 @@ class MandelbrotViewerModel(private val scope: CoroutineScope) {
     private val limits = MutableStateFlow(512)
     private val parallel = MutableStateFlow(true)
     private val colorMaps = MutableStateFlow(ColorMap.Plasma)
+    private val mandelbrots = MutableStateFlow(MandelbrotMap.UNIT);
 
-    @OptIn(FlowPreview::class)
-    private val maps = combine(viewPorts, limits, parallel) { viewPort: Viewport, limit: Int, parallel: Boolean ->
-        calculateMandelbrotMap(MandelbrotMap.Options.fromViewport(viewPort).copy(limit = limit), parallel = parallel)
-    }.flattenConcat()
+    private val options = combine(viewPorts, limits) { viewPort: Viewport, limit: Int ->
+        MandelbrotMap.Options.fromViewport(viewPort, limit)
+    }
 
-    private val _bitmaps = MutableStateFlow(EMPTY_BITMAP)
-    val bitmaps : StateFlow<Bitmap> = _bitmaps
+    val bitmaps = combine(mandelbrots, colorMaps) { mandelbrot, colorMap -> mandelbrot.asBitmap(colorMap) }
 
     init {
         scope.launch(Dispatchers.Default) {
-            combine(maps, colorMaps) { map, colorMap ->
-                _bitmaps.update {
-                    map.asBitmap(colorMap)
-                }
+            combine(options, parallel) { options: MandelbrotMap.Options, parallel: Boolean ->
+                calculateMandelbrotMaps(options, parallel, resolutions = listOf(64, 4, 1))
             }.collect()
         }
     }
@@ -54,7 +53,7 @@ class MandelbrotViewerModel(private val scope: CoroutineScope) {
     fun updatePosition(offset: Offset) {
         this.viewPorts.update { viewPort ->
             val (x, y) = MandelbrotMap.Options
-                .fromViewport(viewPort)
+                .fromViewport(viewPort, limits.value)
                 .convertScreenCoordinates(offset.x, offset.y)
             viewPort.copy(x = x, y = y)
         }
@@ -68,9 +67,15 @@ class MandelbrotViewerModel(private val scope: CoroutineScope) {
         this.parallel.update { parallel }
     }
 
-    private suspend fun calculateMandelbrotMap(options: MandelbrotMap.Options, parallel: Boolean): Flow<MandelbrotMap> = flow {
-        listOf(64, 16, 4, 1).forEach { resolution ->
-            emit(MandelbrotMap.run(options.withResolution(resolution), parallel = parallel))
+    private suspend fun calculateMandelbrotMaps(options: MandelbrotMap.Options, parallel: Boolean, resolutions: List<Int>) = coroutineScope {
+        // this can probably be done nicer, but don't know how atm
+        currentCalculationJob.cancel()
+        currentCalculationJob = launch {
+            resolutions.forEach { resolution ->
+                mandelbrots.update {
+                    MandelbrotMap.run(options.withResolution(resolution), parallel)
+                }
+            }
         }
     }
 }

@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
     requester: FocusRequester,
     model: MandelbrotViewerModel
 ) {
-    val bitmap by model.bitmaps.collectAsState()
+    val bitmap by model.bitmaps.collectAsState(EMPTY_BITMAP)
 
     Canvas(modifier = Modifier
         .fillMaxSize()

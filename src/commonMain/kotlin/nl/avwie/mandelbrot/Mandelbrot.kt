@@ -54,6 +54,10 @@ class MandelbrotMap(
 
     companion object {
 
+        val UNIT : MandelbrotMap = MandelbrotMap(
+            Options.UNIT, IntArray(1) { 0 }
+        )
+
         suspend fun run(options: Options, parallel: Boolean) = coroutineScope {
             val buffer = IntArray(options.xRes * options.yRes) { 0 }
             (0 until options.yRes).forEach { y ->
@@ -99,14 +103,24 @@ class MandelbrotMap(
         }
 
         companion object {
-            fun fromViewport(viewport: Viewport) = with(viewport) {
+            val UNIT : Options = Options(
+                xMin = 0.0,
+                xMax = 1.0,
+                yMin = 0.0,
+                yMax = 1.0,
+                xRes = 1,
+                yRes = 1
+            )
+
+            fun fromViewport(viewport: Viewport, limit: Int) = with(viewport) {
                 Options(
                     xMin = x - 0.5 * xScale,
                     xMax = x + 0.5 * xScale,
                     yMin = y - 0.5 * xScale * height / width,
                     yMax = y + 0.5 * xScale * height / width,
                     xRes = width,
-                    yRes = height
+                    yRes = height,
+                    limit = limit
                 )
             }
         }
