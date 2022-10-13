@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.*
 class MandelbrotViewerModel(private val scope: CoroutineScope) {
 
     private var currentCalculationJob : Job = Job()
+    private var minResolution = 1
 
     private val viewPorts = MutableStateFlow(
         Viewport(
@@ -34,7 +35,7 @@ class MandelbrotViewerModel(private val scope: CoroutineScope) {
     init {
         scope.launch(Dispatchers.Default) {
             combine(options, parallel) { options: MandelbrotMap.Options, parallel: Boolean ->
-                calculateMandelbrotMaps(options, parallel, resolutions = listOf(64, 4, 1))
+                calculateMandelbrotMaps(options, parallel, resolutions = listOf(64, 4, minResolution))
             }.collect()
         }
     }
@@ -62,6 +63,10 @@ class MandelbrotViewerModel(private val scope: CoroutineScope) {
 
     fun setParallel(parallel: Boolean) {
         this.parallel.update { parallel }
+    }
+
+    fun setMinResolution(resolution: Int) {
+        minResolution = resolution
     }
 
     private suspend fun calculateMandelbrotMaps(options: MandelbrotMap.Options, parallel: Boolean, resolutions: List<Int>) = coroutineScope {

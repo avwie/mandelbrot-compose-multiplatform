@@ -18,8 +18,10 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 
 @Composable fun MandelbrotViewer(model: MandelbrotViewerModel) {
     val requester = remember { FocusRequester() }
@@ -42,6 +44,11 @@ import androidx.compose.ui.unit.dp
     model: MandelbrotViewerModel
 ) {
     val bitmap by model.bitmaps.collectAsState(EMPTY_BITMAP)
+    val minResolution = LocalDensity.current.density.toInt()
+
+    LaunchedEffect(minResolution) {
+        model.setMinResolution(minResolution)
+    }
 
     Canvas(modifier = Modifier
         .fillMaxSize()
