@@ -11,8 +11,6 @@ import kotlin.time.measureTime
 
 class MandelbrotViewerModel(private val scope: CoroutineScope) {
 
-    private var currentRenderJob: Job = Job()
-
     private val viewPorts = MutableStateFlow(
         Viewport(
             width = 1,
