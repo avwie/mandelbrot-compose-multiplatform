@@ -1,9 +1,7 @@
 package nl.avwie.mandelbrot
 
 import ColorMap
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.coroutineScope
 import org.jetbrains.skia.*

@@ -5,9 +5,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import org.jetbrains.skia.Bitmap
-import kotlin.time.ExperimentalTime
-import kotlin.time.measureTime
 
 class MandelbrotViewerModel(private val scope: CoroutineScope) {
 
