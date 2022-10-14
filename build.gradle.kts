@@ -76,8 +76,6 @@ kotlin {
                 implementation("org.jetbrains.skiko:skiko:0.7.35")
                 implementation(compose.runtime)
                 implementation(compose.material)
-                implementation(compose.foundation)
-                implementation(compose.ui)
             }
         }
 

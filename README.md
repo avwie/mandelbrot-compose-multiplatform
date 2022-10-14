@@ -1,5 +1,9 @@
 # Highly experimental Mandelbrot viewer in Kotlin Compose Multiplatform
 
+<video controls width="100%">
+    <source src="https://avwie.github.io/movies/mandelbrot.mp4" type="video/mp4">
+</video>
+
 As a way of experimenting with Kotlin Compose I decided to build Mandelbrot plotter. 
 It works, but there are some issues, as expected:
 

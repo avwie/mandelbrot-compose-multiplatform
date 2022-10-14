@@ -21,7 +21,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 
 @Composable fun MandelbrotViewer(model: MandelbrotViewerModel) {
     val requester = remember { FocusRequester() }

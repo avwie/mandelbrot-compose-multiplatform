@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-class MandelbrotViewerModel(private val scope: CoroutineScope) {
+class MandelbrotViewerModel(scope: CoroutineScope) {
 
     private var currentCalculationJob : Job = Job()
     private var minResolution = 1
